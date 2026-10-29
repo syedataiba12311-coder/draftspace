@@ -1,110 +1,642 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# DraftSpace
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+DraftSpace is a lightweight full-stack collaborative document editor inspired by Google Docs.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+The project was built as a time-boxed product engineering exercise focused on demonstrating practical full-stack development, product prioritization, persistence, document editing, access control, and usability.
 
-## Features
+Rather than attempting to reproduce the entire Google Docs feature set, I prioritized the core document lifecycle:
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Proxy
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+**Create → Edit → Format → Save → Reopen**
 
-## Demo
+The application is built with **Next.js, TypeScript, Tailwind CSS, Tiptap, and Supabase**.
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+---
 
-## Deploy to Vercel
+## Live Demo
 
-Vercel deployment will guide you through creating a Supabase account and project.
+**Live Product:**  
+`ADD_DEPLOYMENT_URL_HERE`
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+**GitHub Repository:**  
+`ADD_GITHUB_REPOSITORY_URL_HERE`
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+**Walkthrough Video:**  
+`ADD_VIDEO_URL_HERE`
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+---
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+# Product Overview
 
-## Clone and run locally
+DraftSpace provides a simple workspace where users can create and edit rich-text documents through a browser-based interface.
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+The goal was to deliver a coherent working product slice rather than a feature-complete Google Docs clone.
 
-2. Create a Next.js app using the Supabase Starter template npx command
+The main product flow is:
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
-
-3. Use `cd` to change into the app's directory
-
-   ```bash
-   cd with-supabase-app
-   ```
-
-4. Rename `.env.example` to `.env.local` and update the following:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[INSERT SUPABASE PROJECT API PUBLISHABLE OR ANON KEY]
+```text
+User signs in
+      ↓
+Dashboard loads
+      ↓
+Create document
+      ↓
+Open editor
+      ↓
+Write + format content
+      ↓
+Autosave to database
+      ↓
+Refresh / reopen
+      ↓
+Content and formatting persist
 ```
 
-> [!NOTE]
-> This example uses `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, which refers to Supabase's new **publishable** key format.
-> Both legacy **anon** keys and new **publishable** keys can be used with this variable name during the transition period. Supabase's dashboard may show `NEXT_PUBLIC_SUPABASE_ANON_KEY`; its value can be used in this example.
-> See the [full announcement](https://github.com/orgs/supabase/discussions/29260) for more information.
+---
 
-Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
+# Features Implemented
 
-5. You can now run the Next.js local development server:
+## Authentication
 
-   ```bash
-   npm run dev
-   ```
+Users can authenticate through Supabase Auth.
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+Authenticated sessions are used throughout the application to associate documents with their owners and protect document access.
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+---
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+## Document Creation
 
-## Feedback and issues
+Users can create new documents directly from the dashboard.
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+Each document is automatically associated with the authenticated user as its owner.
 
-## More Supabase examples
+New documents start with:
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+```text
+Untitled Document
+```
+
+and can later be renamed directly from the editor.
+
+---
+
+## Document Dashboard
+
+The dashboard provides a central place to view documents.
+
+It includes:
+
+- Document cards
+- Document title
+- Last updated information
+- Owned documents section
+- Shared documents section structure
+- New document creation
+- Persistent document retrieval
+
+Documents remain available after page refresh because they are stored in Supabase PostgreSQL rather than browser-only state.
+
+---
+
+## Rich-Text Editing
+
+DraftSpace uses **Tiptap** as the editing engine.
+
+The editor currently supports:
+
+- Bold
+- Italic
+- Underline
+- Heading 1
+- Heading 2
+- Bulleted lists
+- Numbered lists
+- Undo
+- Redo
+- Paragraph editing
+
+The editor is intentionally kept lightweight and focused on the formatting tools required by the assignment.
+
+---
+
+## Document Renaming
+
+The document title can be edited directly from the editor.
+
+An empty title automatically falls back to:
+
+```text
+Untitled Document
+```
+
+A maximum title length is also enforced.
+
+---
+
+## Autosave
+
+Document changes are automatically persisted.
+
+When the user edits the title or document content, DraftSpace waits briefly before saving the latest state.
+
+The interface displays save status:
+
+```text
+Saving...
+```
+
+followed by:
+
+```text
+Saved ✓
+```
+
+This provides a more natural document-editing experience than requiring users to repeatedly press a manual Save button.
+
+---
+
+## Persistent Rich-Text Structure
+
+Editor content is stored as structured Tiptap JSON rather than plain text.
+
+For example:
+
+```json
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "heading",
+      "attrs": {
+        "level": 1
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Project Plan"
+        }
+      ]
+    }
+  ]
+}
+```
+
+This allows formatting and document structure to survive refreshes and reopening.
+
+---
+
+# Technology Stack
+
+## Frontend
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Tiptap
+
+## Backend
+
+- Next.js Server Components
+- Next.js Server Actions
+- Supabase
+
+## Database
+
+- PostgreSQL through Supabase
+
+## Authentication
+
+- Supabase Auth
+
+## Deployment
+
+- Vercel
+
+---
+
+# Architecture
+
+DraftSpace uses a deliberately simple architecture suitable for the assignment's 4–6 hour time constraint.
+
+```text
+Browser
+   │
+   ▼
+Next.js Application
+   │
+   ├── Authentication UI
+   ├── Dashboard
+   ├── Tiptap Editor
+   └── Server Actions
+          │
+          ▼
+      Supabase
+          │
+          ├── Auth
+          └── PostgreSQL
+                 │
+                 ├── profiles
+                 ├── documents
+                 └── document_shares
+```
+
+The decision to use a single Next.js application for both frontend and backend logic reduced unnecessary infrastructure complexity and allowed more time to be spent on the actual product experience.
+
+---
+
+# Database Design
+
+The core data model contains three tables.
+
+## `profiles`
+
+Stores application-level user information.
+
+```text
+id
+email
+display_name
+created_at
+```
+
+The profile ID corresponds to the authenticated Supabase user ID.
+
+---
+
+## `documents`
+
+Stores document ownership, metadata, and rich-text content.
+
+```text
+id
+title
+content
+owner_id
+created_at
+updated_at
+```
+
+The document content is stored as JSON so that rich-text formatting can be preserved.
+
+---
+
+## `document_shares`
+
+Designed to represent document access granted to another user.
+
+```text
+id
+document_id
+user_id
+permission
+created_at
+```
+
+Supported permission values are:
+
+```text
+view
+edit
+```
+
+---
+
+# Authorization
+
+DraftSpace uses Supabase Row Level Security rather than relying only on frontend checks.
+
+The intended access model is:
+
+```text
+Document request
+       ↓
+Is user the owner?
+       ↓
+      Yes
+       ↓
+     Allow
+```
+
+Otherwise:
+
+```text
+Is the document shared with this user?
+       ↓
+      Yes
+       ↓
+Check permission
+       ↓
+Allow appropriate access
+```
+
+This architecture keeps authorization enforcement closer to the data layer.
+
+---
+
+# Local Setup
+
+## Requirements
+
+Install:
+
+- Node.js 20.9+
+- npm
+- Git
+
+A Supabase project is also required.
+
+---
+
+## 1. Clone the repository
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+```
+
+Then:
+
+```bash
+cd draftspace
+```
+
+---
+
+## 2. Install dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3. Configure environment variables
+
+Create:
+
+```text
+.env.local
+```
+
+in the root of the project.
+
+Add:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+```
+
+An `.env.example` file is included in the repository for reference.
+
+Actual credentials are intentionally excluded from Git.
+
+---
+
+## 4. Configure the database
+
+Run the supplied Supabase SQL schema in:
+
+```text
+Supabase Dashboard
+→ SQL Editor
+```
+
+The database should contain:
+
+```text
+profiles
+documents
+document_shares
+```
+
+Row Level Security should also be enabled.
+
+---
+
+## 5. Start the application
+
+```bash
+npm run dev
+```
+
+Then open:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# Environment Security
+
+The repository intentionally does **not** contain `.env.local`.
+
+Environment credentials are excluded through `.gitignore`.
+
+The repository only provides:
+
+```text
+.env.example
+```
+
+with variable names and no real credentials.
+
+---
+
+# Product Decisions and Scope
+
+The assignment explicitly encouraged deliberate prioritization under a limited 4–6 hour development window.
+
+I prioritized the functionality that demonstrates the most important document-product behaviors:
+
+```text
+Authentication
+      ↓
+Document creation
+      ↓
+Rich-text editing
+      ↓
+Autosave
+      ↓
+Persistence
+      ↓
+Ownership / access architecture
+```
+
+This meant intentionally avoiding several features that would have significantly increased implementation complexity without improving the core product demonstration proportionally.
+
+---
+
+# Intentionally Deprioritized Features
+
+The following features were not considered essential for the first product slice:
+
+- Real-time collaborative cursors
+- CRDT-based simultaneous editing
+- Comments
+- Document version history
+- Offline editing
+- Google OAuth
+- Advanced role management
+- Image embedding
+- Document folders
+- DOCX export
+- Advanced search
+- Mobile application
+- Presence indicators
+- Complex animation
+- Full Google Docs-style toolbar
+
+These would be reasonable future enhancements but were intentionally not prioritized within the assignment timebox.
+
+---
+
+# Incomplete / Partial Functionality
+
+Some planned functionality remains partial.
+
+## Sharing UI
+
+The database architecture for document sharing was designed and the `document_shares` model was created.
+
+However, the complete end-to-end sharing interface was not finished within the available development window.
+
+The intended flow was:
+
+```text
+Owner
+   ↓
+Share button
+   ↓
+Enter registered user's email
+   ↓
+Select view/edit permission
+   ↓
+document_shares record created
+   ↓
+Shared user sees document under "Shared With Me"
+```
+
+The dashboard already distinguishes between owned and shared document concepts, but the full user-facing sharing workflow requires additional implementation and validation.
+
+---
+
+## File Import
+
+File upload/import was planned for:
+
+```text
+.txt
+.md
+```
+
+The intended behavior was to convert an uploaded text-based file into an editable DraftSpace document.
+
+This functionality was deprioritized in favor of completing and stabilizing document creation, rich-text editing, persistence, and autosave.
+
+---
+
+## Automated Testing
+
+A meaningful authorization/document-access test was planned.
+
+Due to the time constraint and backend troubleshooting, complete automated test coverage was not finalized.
+
+Manual testing was used to verify the primary document lifecycle.
+
+---
+
+# Supabase Development Constraint
+
+During development, I encountered intermittent Supabase-side errors and limitations while working with the free-tier environment.
+
+Because the assignment was intentionally time-boxed, I chose not to spend a disproportionate amount of the remaining development window troubleshooting infrastructure behavior.
+
+Instead, I prioritized delivering a stable core document workflow and documenting the remaining work transparently.
+
+The application architecture remains designed around Supabase Auth, PostgreSQL, and Row Level Security, and the incomplete features can be completed once the backend environment is operating consistently.
+
+This was a deliberate product-engineering tradeoff:
+
+> Protect the working core experience rather than risk destabilizing completed functionality while attempting to finish every optional surface.
+
+---
+
+# What Is Working
+
+The following functionality was completed and validated during development:
+
+- Authentication setup
+- User-linked document ownership
+- Document creation
+- Document dashboard
+- Opening existing documents
+- Document renaming
+- Rich-text editing
+- Bold formatting
+- Italic formatting
+- Underline formatting
+- Heading formatting
+- Bulleted lists
+- Numbered lists
+- Undo and redo
+- Autosave behavior
+- PostgreSQL document persistence
+- Rich-text JSON persistence
+- Refresh/reopen persistence
+- Basic validation
+- Database-level access architecture
+- Responsive dashboard/editor structure
+
+---
+
+# What I Would Build With Another 2–4 Hours
+
+The next development priorities would be:
+
+### 1. Complete Sharing
+
+Finish the Share dialog and connect exact-email lookup to `document_shares`.
+
+Then verify the complete flow using two accounts:
+
+```text
+User A creates document
+      ↓
+User A shares document
+      ↓
+User B logs in
+      ↓
+Document appears under Shared With Me
+      ↓
+User B edits document
+      ↓
+User A sees the persisted update
+```
+
+### 2. File Import
+
+Add `.txt` and `.md` import with:
+
+- File type validation
+- 2 MB size limit
+- Automatic title generation
+- Conversion into an editable document
+
+### 3. Automated Tests
+
+Add focused tests around:
+
+- Document ownership
+- Shared document access
+- Unauthorized document access
+- Unsupported file uploads
+- Title validation
+
+### 4. Error and Loading States
+
+Add polished toast notifications and skeleton loading states for document operations.
+
+### 5. Production Hardening
+
+Perform additional verification of Sup
